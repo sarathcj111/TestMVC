@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Threading.Tasks;
 using TestMVC.Helper;
@@ -50,11 +51,21 @@ namespace TestMVC.Repository
             GenerateCompanyList();
             return CompanyList;
         }
-        public List<CompanyModel> EditCompany(int CompanyId)
+        //public List<CompanyModel> EditCompany(int CompanyId)
+        //{
+        //    var Companys = GenerateCompanyList();
+        //    var Company = Companys.Find(x => x.Id == CompanyId);
+        //    Company.Name = "edited " + Company.Name;
+        //    return Companys;
+        //}
+        public List<CompanyModel> EditCompany(CompanyModel company)
         {
             var Companys = GenerateCompanyList();
-            var Company = Companys.Find(x => x.Id == CompanyId);
-            Company.Name = "edited " + Company.Name;
+            var Company = Companys.Find(x => x.Id == company.Id);
+            Companys.Remove(company);
+            _helper.RemoveFromJson(Company.Id, "Company");
+            Companys.Add(company);
+            _helper.AddtoJson(Company);
             return Companys;
         }
         public bool DeleteCompany(int CompanyId, out List<CompanyModel> Companys)
@@ -69,6 +80,27 @@ namespace TestMVC.Repository
             }
             else
                 return false;
+        }
+
+        public CompanyModel SearchCompany(int CompanyId)
+        {
+            var Companys = GenerateCompanyList();
+            var Company = Companys.Find(x => x.Id == CompanyId);
+            return Company;
+        }
+
+        public IEnumerable<CompanyModel> SearchLikeCompany(string company)
+        {
+            var Companys = GenerateCompanyList();
+            var Company = Companys.Where(s => s.Name.Contains(company));
+            return Company;
+        }
+
+        public IEnumerable<CompanyModel> SearchLikePatternCompany(string pattern)
+        {
+            var Companys = GenerateCompanyList();
+            var Company = Companys.Where(s => FileSystemName.MatchesSimpleExpression(pattern, s.Name));
+            return Company;
         }
     }
 }

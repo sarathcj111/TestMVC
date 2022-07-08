@@ -28,9 +28,19 @@ namespace TestMVC.Controllers
             return View(books);
         }
 
-        public IActionResult EditBook(int bookId)
+        public IActionResult OpenEditBookPage(int bookId)
         {
-            var bookList = _IBookRepository.EditBook(bookId);
+            var bookList = _IBookRepository.GetAllBooks();
+            var book = bookList.Find(x => x.Id == bookId);
+            var companies = _ICompanyRepository.GetAllCompanys();
+            ViewBag.ListItem = companies;
+
+            return View("EditBook", book);
+        }
+
+        public IActionResult EditBook(BookModel book)
+        {
+            var bookList = _IBookRepository.EditBook(book);
             return View("Index", bookList);
         }
 

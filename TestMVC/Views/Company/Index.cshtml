@@ -24,7 +24,7 @@
             <td>@d.Name</td>
             <td>@d.City</td>
             <td>
-                <form asp-action="EditCompany" method="post">
+                <form asp-action="OpenEditCompanyPage" method="post">
                     <input type="submit" value="Edit" />
                     @Html.Hidden("companyId", @d.Id)
                 </form>

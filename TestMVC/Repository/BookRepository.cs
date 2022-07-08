@@ -61,11 +61,23 @@ namespace TestMVC.Repository
             GenerateBookList();
             return bookList;
         }
-        public List<BookModel> EditBook(int bookId)
+        public List<BookModel> EditBook(BookModel book)
         {
             var books = GenerateBookList();
-            var book = books.Find(x => x.Id == bookId);
-            book.Title = "edited " + book.Title;
+            var objBook = books.Find(x => x.Id == book.Id);
+            var companies = new CompanyRepository(_config);
+            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Company)).Name;
+            book.Company = companyName;
+            //objBook.Title = book.Title;
+            //objBook.Genre = book.Genre;
+            //objBook.Price = book.Price;
+            //objBook.Company = book.Company;
+            books.Remove(books.Find(x => x.Id == book.Id));
+            _helper.RemoveFromJson(book.Id, "Book");
+
+            books.Add(book);
+            _helper.AddtoJson(book);
+
             return books;
         }
         public bool DeleteBook(int bookId,out List<BookModel> books)

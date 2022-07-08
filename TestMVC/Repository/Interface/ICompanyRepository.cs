@@ -10,7 +10,11 @@ namespace TestMVC.Repository.Interface
     {
         List<CompanyModel> AddNewCompany(CompanyModel CompanyModel);
         List<CompanyModel> GetAllCompanys();
-        List<CompanyModel> EditCompany(int CompanyId);
+        //List<CompanyModel> EditCompany(int CompanyId);
+        List<CompanyModel> EditCompany(CompanyModel Company);
         bool DeleteCompany(int CompanyId, out List<CompanyModel> Companys);
+        CompanyModel SearchCompany(int CompanyId);
+        IEnumerable<CompanyModel> SearchLikeCompany(string Company);
+        IEnumerable<CompanyModel> SearchLikePatternCompany(string Company);
     }
 }

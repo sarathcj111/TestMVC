@@ -10,7 +10,7 @@ namespace TestMVC.Repository.Interface
     {
         List<BookModel> AddNewBook(BookModel bookModel);
         List<BookModel> GetAllBooks();
-        List<BookModel> EditBook(int bookId);
+        List<BookModel> EditBook(BookModel bookModel);
         bool DeleteBook(int bookId, out List<BookModel> books);
     }
 }
