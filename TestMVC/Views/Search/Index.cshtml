@@ -1,0 +1,65 @@
+﻿@model SearchModel
+
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        @using (Html.BeginForm("SearchByBookId", "Search"))
+        {
+            @*<td><input asp-for="SearchString" type="text" name="searchByName" id="searchByName" /></td>*@
+            <td>@Html.TextBoxFor(m => m.SearchString)</td>
+            <td><input type="submit" id="SearchByCompanyName" value="SearchByBookId" /></td>
+        }
+    </tr>
+    <tr>
+        @using (Html.BeginForm("SearchByCompanyId", "Search"))
+        {
+            <td>@Html.DropDownListFor(m => m.SearchString, new SelectList(ViewBag.SearchListItem, "Id", "Name"), "–Select Company–")</td>
+            <td><input type="submit" id="SearchById" value="SearchByCompanyId" /></td>
+        }
+    </tr>
+    <tr>
+        @using (Html.BeginForm("SearchByCompanyPattern", "Search"))
+        {
+            @*<td><input asp-for="SearchString" type="text" name="searchByName1" id="searchByName1" /></td>*@
+            <td>@Html.TextBoxFor(m => m.SearchString)</td>
+            <td><input type="submit" id="SearchByCompanyPattern" value="SearchByCompanyPattern" /></td>
+        }
+    </tr>
+</table>
+<h6>Company</h6>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>City</th>
+    </tr>
+    @foreach (var d in Model.Companies)
+    {
+        <tr>
+            <td>@d.Id</td>
+            <td>@d.Name</td>
+            <td>@d.City</td>
+        </tr>
+    }
+</table>
+<h6>Books</h6>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Price</th>
+        <th>Company</th>
+    </tr>
+    @foreach (var d in Model.Books)
+    {
+        <tr>
+            <td>@d.Id</td>
+            <td>@d.Title</td>
+            <td>@d.Genre</td>
+            <td>@d.Price</td>
+            <td>@d.Company</td>
+        </tr>
+    }
+</table>
+
+@Html.Raw(TempData["msg"])

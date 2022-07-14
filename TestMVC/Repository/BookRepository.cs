@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Threading.Tasks;
 using TestMVC.Helper;
@@ -66,7 +67,7 @@ namespace TestMVC.Repository
             var books = GenerateBookList();
             var objBook = books.Find(x => x.Id == book.Id);
             var companies = new CompanyRepository(_config);
-            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Company)).Name;
+            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Id)).Name;
             book.Company = companyName;
             //objBook.Title = book.Title;
             //objBook.Genre = book.Genre;
@@ -94,8 +95,36 @@ namespace TestMVC.Repository
                 return false;
         }
 
+        public BookModel SearchBook(int bookId)
+        {
+            var Books = GenerateBookList();
+            var Book = Books.Find(x => x.Id == bookId);
+            return Book;
+        }
 
-        // Do not pay attention to this part..
-        
+        public IEnumerable<BookModel> SearchLikeBook(string book)
+        {
+            var Books = GenerateBookList();
+            var Book = Books.Where(s => s.Title.Contains(book));
+            return Book;
+        }
+
+        public IEnumerable<BookModel> SearchLikePatternBook(string pattern)
+        {
+            var Books = GenerateBookList();
+            var Book = Books.Where(s => FileSystemName.MatchesSimpleExpression(pattern, s.Title));
+            return Book;
+        }
+
+        public IEnumerable<BookModel> SearchBookByCompany(string bookCompanyId)
+        {
+            var companies = new CompanyRepository(_config);
+            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(bookCompanyId)).Name;
+            var books = GenerateBookList();
+            var bookList = books.Where(s => s.Company == companyName);
+            return bookList;
+        }
+
+
     }
 }

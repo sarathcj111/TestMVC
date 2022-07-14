@@ -19,10 +19,11 @@ namespace TestMVC.Repository
             _config = config;
             _helper = new HelperClass();
         }
-        private List<CompanyModel> CompanyList = new List<CompanyModel>();
+        //private List<CompanyModel> CompanyList = new List<CompanyModel>();
 
         private List<CompanyModel> GenerateCompanyList()
         {
+            var companyList = new List<CompanyModel>();
             for (var i = 0; i <= 100; i++)
             {
                 if(_config.GetValue<int>($"Company{i + 1}:Id") > 0)
@@ -31,12 +32,12 @@ namespace TestMVC.Repository
                     Company.Id = _config.GetValue<int>($"Company{i + 1}:Id");
                     Company.Name = _config.GetValue<string>($"Company{i + 1}:Name");
                     Company.City = _config.GetValue<string>($"Company{i + 1}:City");
-                    CompanyList.Add(Company);
+                    companyList.Add(Company);
                 }
                 else
                     break;
             }
-            return CompanyList;
+            return companyList;
         }
         public List<CompanyModel> AddNewCompany(CompanyModel Company)
         {
@@ -48,8 +49,8 @@ namespace TestMVC.Repository
         }
         public List<CompanyModel> GetAllCompanys()
         {
-            GenerateCompanyList();
-            return CompanyList;
+            var companyList = GenerateCompanyList();
+            return companyList;
         }
         //public List<CompanyModel> EditCompany(int CompanyId)
         //{

@@ -12,5 +12,9 @@ namespace TestMVC.Repository.Interface
         List<BookModel> GetAllBooks();
         List<BookModel> EditBook(BookModel bookModel);
         bool DeleteBook(int bookId, out List<BookModel> books);
+        BookModel SearchBook(int bookId);
+        IEnumerable<BookModel> SearchLikeBook(string bookString);
+        IEnumerable<BookModel> SearchLikePatternBook(string pattern);
+        IEnumerable<BookModel> SearchBookByCompany(string bookCompanyId);
     }
 }
