@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -7,6 +8,7 @@ using System.Dynamic;
 using System.IO;
 using System.IO.Enumeration;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TestMVC.Helper;
 using TestMVC.Models;
@@ -57,11 +59,63 @@ namespace TestMVC.Repository
             _helper.AddtoJson(book);
             return books;
         }
+
+        public async Task<bool> AddNewBookAsync(BookModel book)
+        {
+            var books = await GetAllBooksFromApi();
+            book.Id = books.Count + 1;
+
+            var companies = new CompanyRepository(_config);
+            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Company)).Name;
+            book.Company = companyName;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44329");
+
+                string json = JsonConvert.SerializeObject(book);
+
+                StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var result = await client.PostAsync("Test/addBook", httpContent);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Server error try after some time.");
+                }
+            }
+        }
+
         public List<BookModel> GetAllBooks()
         {
             GenerateBookList();
             return bookList;
         }
+        public async Task<List<BookModel>> GetAllBooksFromApi()
+        {
+            List<BookModel> books = null;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44329");
+
+                var result = await client.GetAsync("Test/getAllBooks");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    books = JsonConvert.DeserializeObject<List<BookModel>>(await result.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    throw new Exception("Server error. try after some time.");
+                }
+            }
+            return books;
+        }
+
         public List<BookModel> EditBook(BookModel book)
         {
             var books = GenerateBookList();

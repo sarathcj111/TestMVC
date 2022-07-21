@@ -16,5 +16,7 @@ namespace TestMVC.Repository.Interface
         IEnumerable<BookModel> SearchLikeBook(string bookString);
         IEnumerable<BookModel> SearchLikePatternBook(string pattern);
         IEnumerable<BookModel> SearchBookByCompany(string bookCompanyId);
+        Task<List<BookModel>> GetAllBooksFromApi();
+        Task<bool> AddNewBookAsync(BookModel book);
     }
 }

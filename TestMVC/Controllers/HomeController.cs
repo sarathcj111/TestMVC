@@ -22,10 +22,19 @@ namespace TestMVC.Controllers
             _IBookRepository = iBookRepository;
             _ICompanyRepository = iCompanyRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var books = _IBookRepository.GetAllBooks();
-            return View(books);
+            //var books = _IBookRepository.GetAllBooks();
+            try
+            {
+                var books = await _IBookRepository.GetAllBooksFromApi();
+                return View(books);
+            }
+            catch(Exception ex)
+            {
+                return View("Error",new ErrorViewModel { RequestId = ex.Message ?? HttpContext.TraceIdentifier });
+            }
+            //return View(books);
         }
 
         public IActionResult OpenEditBookPage(int bookId)
@@ -57,10 +66,27 @@ namespace TestMVC.Controllers
             return View("AddBook");
         }
 
-        public IActionResult AddBook(BookModel book)
+        public async Task<IActionResult> AddBook(BookModel book)
         {
-            var books = _IBookRepository.AddNewBook(book);            
-            return View("Index", books);
+            //var books = _IBookRepository.AddNewBook(book);            
+            //return View("Index", books);
+            try
+            {
+                var isAdded = await _IBookRepository.AddNewBookAsync(book);
+                if (isAdded)
+                {
+                    var books = await _IBookRepository.GetAllBooksFromApi();
+                    return View("Index" , books);
+                }
+                else
+                {
+                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                }
+            }
+            catch (Exception ex)
+            {
+                return View("Error", new ErrorViewModel { RequestId = ex.Message ?? HttpContext.TraceIdentifier });
+            }
         }
 
         public IActionResult Privacy()
