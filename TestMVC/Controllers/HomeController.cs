@@ -37,9 +37,9 @@ namespace TestMVC.Controllers
             //return View(books);
         }
 
-        public IActionResult OpenEditBookPage(int bookId)
+        public async Task<IActionResult> OpenEditBookPage(int bookId)
         {
-            var bookList = _IBookRepository.GetAllBooks();
+            var bookList = await _IBookRepository.GetAllBooksFromApi();
             var book = bookList.Find(x => x.Id == bookId);
             var companies = _ICompanyRepository.GetAllCompanys();
             ViewBag.ListItem = companies;
@@ -47,16 +47,35 @@ namespace TestMVC.Controllers
             return View("EditBook", book);
         }
 
-        public IActionResult EditBook(BookModel book)
+        public async Task<IActionResult> EditBook(BookModel book)
         {
-            var bookList = _IBookRepository.EditBook(book);
-            return View("Index", bookList);
+            //var bookList = _IBookRepository.EditBook(book);
+            //return View("Index", bookList);
+            try
+            {
+                var books = await _IBookRepository.EditBookAsync(book);
+                return View("Index", books);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", new ErrorViewModel { RequestId = ex.Message ?? HttpContext.TraceIdentifier });
+            }
         }
 
-        public IActionResult DeleteBook(int bookId)
+        public async Task<IActionResult> DeleteBook(int bookId)
         {
-            var isbook = _IBookRepository.DeleteBook(bookId, out List<BookModel> books);
-            return View("Index", books);
+            //var isbook = _IBookRepository.DeleteBook(bookId, out List<BookModel> books);
+            //return View("Index", books);
+            try
+            {
+                var books = await _IBookRepository.DeleteBookAsync(bookId);
+                return View("Index", books);
+            }
+            catch (Exception ex)
+            {
+
+                return View("Error", new ErrorViewModel { RequestId = ex.Message ?? HttpContext.TraceIdentifier });
+            }
         }
 
         public IActionResult OpenAddBookPage()

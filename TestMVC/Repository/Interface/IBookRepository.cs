@@ -18,5 +18,7 @@ namespace TestMVC.Repository.Interface
         IEnumerable<BookModel> SearchBookByCompany(string bookCompanyId);
         Task<List<BookModel>> GetAllBooksFromApi();
         Task<bool> AddNewBookAsync(BookModel book);
+        Task<List<BookModel>> EditBookAsync(BookModel bookModel);
+        Task<List<BookModel>> DeleteBookAsync(int bookId);
     }
 }

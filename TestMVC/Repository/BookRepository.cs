@@ -121,7 +121,7 @@ namespace TestMVC.Repository
             var books = GenerateBookList();
             var objBook = books.Find(x => x.Id == book.Id);
             var companies = new CompanyRepository(_config);
-            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Id)).Name;
+            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Company)).Name;
             book.Company = companyName;
             //objBook.Title = book.Title;
             //objBook.Genre = book.Genre;
@@ -135,6 +135,34 @@ namespace TestMVC.Repository
 
             return books;
         }
+
+        public async Task<List<BookModel>> EditBookAsync(BookModel book)
+        {
+            var companies = new CompanyRepository(_config);
+            var companyName = companies.GetAllCompanys().Find(x => x.Id == Convert.ToInt32(book.Company)).Name;
+            book.Company = companyName;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44329");
+
+                string json = JsonConvert.SerializeObject(book);
+
+                StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var result = await client.PutAsync("Test/editBook", httpContent);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<List<BookModel>>(await result.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    throw new Exception("Server error try after some time.");
+                }
+            }
+        }
+
         public bool DeleteBook(int bookId,out List<BookModel> books)
         {
             books = GenerateBookList();
@@ -147,6 +175,27 @@ namespace TestMVC.Repository
             }
             else
                 return false;
+        }
+
+        public async Task<List<BookModel>> DeleteBookAsync(int bookId)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44329");
+
+            // https://localhost:44329/Test/deleteBook?bookid=5&companyId=1
+
+                var result = await client.DeleteAsync($"Test/deleteBook?bookid={bookId}");
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<List<BookModel>>(await result.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    throw new Exception("Server error try after some time.");
+                }
+            }
         }
 
         public BookModel SearchBook(int bookId)
