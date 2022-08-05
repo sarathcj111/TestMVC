@@ -1,0 +1,23 @@
+﻿@model LoginViewModel
+@{
+    ViewBag.Title = "Login";
+}
+<h2>Login</h2>
+
+<form method="post" asp-action="Login">
+    <div>
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+    </div>
+
+    <input type="submit" value="Login" />
+</form>
+
+<a asp-action="Index" asp-controller="Account">Register</a>
+
+@Html.Raw(ViewBag.loginMsg)

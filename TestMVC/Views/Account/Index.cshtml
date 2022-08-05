@@ -1,0 +1,47 @@
+﻿@model RegisterUserModel
+@{
+    ViewBag.Title = "Register";
+}
+<h2>Register</h2>
+
+<form method="post" asp-action="RegisterUser">
+    <div>
+        <label asp-for="Username"></label>
+        <input id="uName" asp-for="Username" />
+        <span id="uSpan" asp-for="Username" style="color: red;"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+    </div>
+
+    <div>
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" />
+    </div>
+
+    <input id="regBtn" disabled type="submit" value="Register" />
+</form>
+
+@Html.Raw(ViewBag.registerMsg)
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#uName").blur(function () {
+        var name = $('#uName').val()
+        $.ajax({
+            url: "/Account/CheckUserNameAvailability?uName=" + name,
+            type: "GET"
+        }).done(function (res) {
+            var text = res ? "" : "User Name Not Available. Try Different"            
+            $("#uSpan").text(text);
+            if (res) {
+                $('#regBtn').removeAttr("disabled");
+            }
+            else {
+                $('#regBtn').attr('disabled', 'disabled');
+            }
+        });
+    });
+</script>

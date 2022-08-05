@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
+using TestMVC.ActionFilter;
 using TestMVC.Models;
 using TestMVC.Repository.Interface;
 
 namespace TestMVC.Controllers
 {
+    [CustomFiter]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -62,6 +62,7 @@ namespace TestMVC.Controllers
             }
         }
 
+        [CustomAuthorize]
         public async Task<IActionResult> DeleteBook(int bookId)
         {
             //var isbook = _IBookRepository.DeleteBook(bookId, out List<BookModel> books);

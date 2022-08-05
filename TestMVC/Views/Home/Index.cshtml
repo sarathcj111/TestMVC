@@ -1,4 +1,6 @@
-﻿@model IEnumerable<TestMVC.Models.BookModel>
+﻿@using Microsoft.AspNetCore.Http
+
+@model IEnumerable<TestMVC.Models.BookModel>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -27,18 +29,23 @@
             <td>@d.Genre</td>
             <td>@d.Price</td>
             <td>@d.Company</td>
-            <td><form asp-action="OpenEditBookPage" method="post">
+            <td>
+                <form asp-action="OpenEditBookPage" method="post">
                     <input type="submit" value="Edit" />
                     @Html.Hidden("bookId", @d.Id)
                 </form>
             </td>
             <td>
                 @*<form asp-action="DeleteBook" method="post">
-                    <input type="submit" value="Delete" />
-                    @Html.Hidden("bookId", @d.Id)
-                </form>*@
-                <input type="button" value="Delete" onclick="location.href='@Url.Action("DeleteBook", "Home", new { bookId = d.Id })'" />                
+                        <input type="submit" value="Delete" />
+                        @Html.Hidden("bookId", @d.Id)
+                    </form>*@
+                <input type="button" value="Delete" onclick="location.href='@Url.Action("DeleteBook", "Home", new { bookId = d.Id })'" />
             </td>
         </tr>
     }
-</table> 
+</table>
+@if (@Context.Session.GetString("Unauthorize")?.Length > 0)
+{
+    @Html.Raw(@Context.Session.GetString("Unauthorize"))
+}

@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using TestMVC.ActionFilter;
 using TestMVC.Models;
 using TestMVC.Repository.Interface;
 
 namespace TestMVC.Controllers
 {
+    [CustomFiter()]
     public class CompanyController : Controller
     {
         private readonly ILogger<CompanyController> _logger;

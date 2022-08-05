@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -35,6 +37,17 @@
                         </li>
                     </ul>
                 </div>
+                <div>
+                    <p style="margin-bottom: 5px; padding-right: 10px;"><b>User: </b> @Context.Session.GetString("UserName")
+                </div>
+                @if (Context.Session.Keys.Count() > 0 && @Context.Session.GetString("UserName").Length > 0)
+            {
+            <div>
+                <input type="button" value="Logout" onclick="location.href='@Url.Action("Logout", "Login")'" />
+                @*<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>*@
+            </div>
+            }
+
             </div>
         </nav>
     </header>
